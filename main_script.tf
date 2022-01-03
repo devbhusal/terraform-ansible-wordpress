@@ -233,7 +233,8 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH} -e 'pub_key=${var.PUBLIC_KEY_PATH}' playbook_test.yml"
+   # command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH} -e 'pub_key=${var.PUBLIC_KEY_PATH}' playbook_test.yml"
+   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook_test.yml"
 
 
 
