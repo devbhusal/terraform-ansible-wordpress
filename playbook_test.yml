@@ -1,5 +1,5 @@
 - name: Install wordpress in new server
-  hosts: webserver
+  hosts: all
   become: yes
  
     
