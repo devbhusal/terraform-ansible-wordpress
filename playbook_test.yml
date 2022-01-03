@@ -1,0 +1,20 @@
+- name: Install wordpress in new server
+  hosts: webserver
+  become: yes
+ 
+    
+  tasks:
+
+  - name: install LAMP server
+    yum: name={{ item }} state=present
+    loop: [ 'httpd']
+
+  - name: services started   
+    service: name={{ item }} state=restarted enabled=True
+    loop: [ 'httpd']
+        
+
+
+
+
+

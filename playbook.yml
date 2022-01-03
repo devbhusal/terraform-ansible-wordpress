@@ -1,0 +1,122 @@
+---
+- name: Install wordpress in new server
+  hosts: webserver
+  become: yes
+ 
+    
+  tasks:
+
+  - name: Setting up variables
+    set_facts:
+      php_modules: [  'php-mysqlnd', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+
+      #MySQL Settings
+      mysql_rds: ${db_RDS}  
+      mysql_db: ${db_name}
+      mysql_user: ${db_username}
+      mysql_password: ${db_user_password}
+
+      #epel and remi
+      remi_packages: [ 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm','https://rpms.remirepo.net/enterprise/remi-release-8.rpm']
+
+  
+  # update yum repo
+  - name: Yum update
+    yum:
+      name: '*'
+      state: latest
+      
+ #installing php using remi-php
+  - name: registering rpm key
+    rpm_key:
+      state: present
+      key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
+
+  - name: install epel
+    yum: name={{ item }} state=present
+    loop: "{{ remi_packages }}"
+    
+  - name: python 3.9 installation
+    yum:
+      name: python39
+      state: present
+
+
+
+  - name: Make sure pymysql is present
+    pip:
+      name: pymysql
+      state: present   
+
+  # install LAMP server
+  - name: install LAMP server
+    yum: name={{ item }} state=present
+    loop: [ 'httpd']
+
+ 
+ 
+
+  # update yum repo
+  - name:  resetting php 
+    shell: yum module reset php -y
+    
+  - name:  installing php from remi php
+  
+  
+    shell: yum module install php:remi-7.4 -y
+
+  
+
+  # install php extension
+  - name: install php extensions
+    yum: name={{ item }} state=present
+    loop: "{{ php_modules }}"
+
+
+  
+
+  # mysql configuration  
+
+  
+
+    
+
+
+  - name: Set permissions for directories
+    shell: "/usr/bin/find /var/www/html/ -type d -exec chmod 2775 {} \\;"
+    
+
+  - name: Set permissions for files
+    shell: "/usr/bin/find /var/www/html/ -type f -exec chmod 0664 {} \\;"    
+            
+  # wordpress download and install
+  - name: Wordpress download and unpacking
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: "/var/www"
+      remote_src: yes
+  
+  - name: Copy wordpress files to /html folder
+    shell: cp /var/www/wordpress/. /var/www/html -r
+
+  - name: Delete old wordpress files
+    shell: rm /var/www/wordpress -r 
+ 
+    
+  - name: Set up wp-config
+    template:
+      src: "files/wp-config.php.j2"
+      dest: "/var/www/html/wp-config.php"
+        
+  - name: set permissions (changing ownership)
+    shell: chown -R azureuser:apache /var/www/html
+
+  - name: set permission (chmod 774)  
+    shell: chown -R azureuser:apache /var/www/html
+
+   # apache and mysqld server started
+  - name: services started   
+    service: name={{ item }} state=restarted enabled=True
+    loop: [ 'httpd']
+     
+
