@@ -7,7 +7,7 @@
 
   - name: Setting up variables
     set_fact:
-      php_modules: [  'php-mysqlnd', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+      php_modules: [  'php-fpm','php-mysqlnd', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
 
       #MySQL Settings
       mysql_rds: ${db_RDS}  
@@ -27,7 +27,7 @@
 
   - name: install Apache server
     yum: name={{ item }} state=present
-    loop: [ 'httpd']    
+    loop: [ 'httpd','mysql']    
       
  #installing php using linux-extra
   
