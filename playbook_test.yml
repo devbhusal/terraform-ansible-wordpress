@@ -25,6 +25,8 @@
       name: '*'
       state: latest
 
+ 
+
   - name: install LAMP server
     yum: name={{ item }} state=present
     loop: [ 'httpd']
@@ -32,6 +34,10 @@
   - name: services started   
     service: name={{ item }} state=restarted enabled=True
     loop: [ 'httpd']
+
+  - name: RDS
+    debug:
+      msg: "{{ mysql_rds }}"  
 
  
 

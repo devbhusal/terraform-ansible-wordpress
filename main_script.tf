@@ -216,6 +216,11 @@ output "INFO" {
   value = "AWS Resources and Wordpress has been provisioned. Go to http://${aws_eip.eip.public_ip}"
 }
 
+resource "local_file" "saved-manifesto" {
+  content = "${data.template_file.playbook.rendered}"
+  filename = "./playbook-rendered.yml"
+}
+
 resource "null_resource" "Wordpress_Installation_Waiting" {
   connection {
     type        = "ssh"
@@ -223,6 +228,9 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
     private_key = file(var.PRIV_KEY_PATH)
     host        = aws_eip.eip.public_ip
   }
+
+
+
 
 
  
@@ -234,12 +242,9 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
 
   provisioner "local-exec" {
    # command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH} -e 'pub_key=${var.PUBLIC_KEY_PATH}' playbook_test.yml"
-   command = <<-EOT
-      echo "${data.template_file.playbook.rendered}" > playbook-rendered.yml
-      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml
-
-   EOT   
-
+   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml"
+     
+ #echo "${data.template_file.playbook.rendered}" > playbook-rendered.yml
 
 
 
