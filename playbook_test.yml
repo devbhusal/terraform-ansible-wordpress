@@ -33,10 +33,7 @@
     service: name={{ item }} state=restarted enabled=True
     loop: [ 'httpd']
 
-  - name: RDS ENDPOINT
-    debug: 
-      msg: "{{ mysql_rds}}"
-        
+ 
 
 
 
