@@ -183,7 +183,7 @@ resource "aws_instance" "wordpressec2" {
   instance_type   = var.instance_type
   subnet_id       = aws_subnet.prod-subnet-public-1.id
   security_groups = ["${aws_security_group.ec2_allow_rule.id}"]
-  //user_data = "${data.template_file.user_data.rendered}"
+  
   key_name = aws_key_pair.mykey-pair.id
   tags = {
     Name = "Wordpress.web"
@@ -235,16 +235,16 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
 
  
   provisioner "remote-exec" {
-     #inline = ["${data.template_file.user_data.rendered}"]
+     
      inline = ["sudo yum update -y","sudo yum install python3 -y", "echo Done!"]
    
   }
 
   provisioner "local-exec" {
-   # command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH} -e 'pub_key=${var.PUBLIC_KEY_PATH}' playbook_test.yml"
+  
    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml"
      
- #echo "${data.template_file.playbook.rendered}" > playbook-rendered.yml
+ 
 
 
 
