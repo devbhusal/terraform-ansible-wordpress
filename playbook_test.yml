@@ -24,6 +24,10 @@
     yum:
       name: '*'
       state: latest
+
+  - name: install Apache server
+    yum: name={{ item }} state=present
+    loop: [ 'httpd']    
       
  #installing php using linux-extra
   
@@ -32,8 +36,8 @@
 
   - name: Clean metadata
     shell: yum clean metadata
-    
-      
+
+
 
   
 
