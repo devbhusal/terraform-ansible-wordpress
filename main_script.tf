@@ -216,7 +216,7 @@ output "INFO" {
   value = "AWS Resources and Wordpress has been provisioned. Go to http://${aws_eip.eip.public_ip}"
 }
 
-resource "local_file" "saved-manifesto" {
+resource "local_file" "playbook-rendered-file" {
   content = "${data.template_file.playbook.rendered}"
   filename = "./playbook-rendered.yml"
 }
