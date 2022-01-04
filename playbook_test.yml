@@ -5,6 +5,26 @@
     
   tasks:
 
+  - name: Setting up variables
+    set_facts:
+      php_modules: [  'php-mysqlnd', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+
+      #MySQL Settings
+      mysql_rds: ${db_RDS}  
+      mysql_db: ${db_name}
+      mysql_user: ${db_username}
+      mysql_password: ${db_user_password}
+
+      #epel and remi
+      remi_packages: [ 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm','https://rpms.remirepo.net/enterprise/remi-release-8.rpm']
+
+  
+
+  - name: Yum update
+    yum:
+      name: '*'
+      state: latest
+
   - name: install LAMP server
     yum: name={{ item }} state=present
     loop: [ 'httpd']
@@ -12,6 +32,10 @@
   - name: services started   
     service: name={{ item }} state=restarted enabled=True
     loop: [ 'httpd']
+
+  - name: RDS ENDPOINT
+    debug: 
+      msg: "{{ mysql_rds}}"
         
 
 
