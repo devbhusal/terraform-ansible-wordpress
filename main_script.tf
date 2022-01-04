@@ -228,14 +228,14 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
  
   provisioner "remote-exec" {
      #inline = ["${data.template_file.user_data.rendered}"]
-     inline = ["sudo yum install python3 -y", "echo Done!"]
+     inline = ["sudo yum update -y","sudo yum install python3 -y", "echo Done!"]
    
   }
 
   provisioner "local-exec" {
    # command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH} -e 'pub_key=${var.PUBLIC_KEY_PATH}' playbook_test.yml"
    command = <<-EOT
-      echo ${data.template_file.playbook.rendered} > playbook-rendered.yml
+      echo "${data.template_file.playbook.rendered}" > playbook-rendered.yml
       ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml
 
    EOT   
