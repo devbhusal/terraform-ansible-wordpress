@@ -15,9 +15,7 @@
       mysql_user: ${db_username}
       mysql_password: ${db_user_password}
 
-      #epel and remi
-      remi_packages: [ 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm','https://rpms.remirepo.net/enterprise/remi-release-8.rpm']
-
+  
   
 
   
@@ -27,24 +25,15 @@
       name: '*'
       state: latest
       
- #installing php using remi-php
-  - name: registering rpm key
-    rpm_key:
-      state: present
-      key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
-
-  - name: install epel
-    yum: name={{ item }} state=present
-    loop: "{{ remi_packages }}"
-    
-
-  - name:  resetting php 
-    shell: yum module reset php -y
-    
-  - name:  installing php from remi php
+ #installing php using linux-extra
   
-  
-    shell: yum module install php:remi-7.4 -y
+  - name: Installing PHP
+    shell: amazon-linux-extras enable php7.4
+
+  - name: Clean metadata
+    shell: yum clean metadata
+    
+      
 
   
 
