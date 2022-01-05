@@ -216,6 +216,7 @@ output "INFO" {
   value = "AWS Resources and Wordpress has been provisioned. Go to http://${aws_eip.eip.public_ip}"
 }
 
+# Save Rendered playbook content to local file
 resource "local_file" "playbook-rendered-file" {
   content = "${data.template_file.playbook.rendered}"
   filename = "./playbook-rendered.yml"
@@ -233,16 +234,16 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
 
 
 
- 
+ # Run script to update python on remote client
   provisioner "remote-exec" {
      
      inline = ["sudo yum update -y","sudo yum install python3 -y", "echo Done!"]
    
   }
 
+# Play ansiblw playbook
   provisioner "local-exec" {
-  
-   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml"
+     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml"
      
  
 

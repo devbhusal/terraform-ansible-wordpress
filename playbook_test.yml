@@ -9,7 +9,7 @@
     set_fact:
       php_modules: [  'php-fpm','php-mysqlnd', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
 
-      #MySQL Settings
+      #MySQL Settings to be rendered by terraform
       mysql_rds: ${db_RDS}  
       mysql_db: ${db_name}
       mysql_user: ${db_username}
@@ -47,15 +47,6 @@
     loop: "{{ php_modules }}"
 
 
-  
-
-  # mysql configuration  
-
-  
-
-    
-
-
   - name: Set permissions for directories
     shell: "/usr/bin/find /var/www/html/ -type d -exec chmod 2775 {} \\;"
     
@@ -88,7 +79,7 @@
   - name: set permission (chmod 774)  
     shell: chown -R ec2-user:apache /var/www/html
 
-   # apache and mysqld server started
+   # apache  server started
   - name: services started   
     service: name={{ item }} state=restarted enabled=True
     loop: [ 'httpd']
