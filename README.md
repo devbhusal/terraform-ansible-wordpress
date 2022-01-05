@@ -1,14 +1,15 @@
 <img src= "https://devbhusal.com/logo.png" />
-<h2>
+<h3>
 This terraform projects creates
  RDS databse with mysql 5.7 
- #EC2 instance with wordpress pre installed and configured 
- ----------------------------------------------------------------------
- AWS FREE TRIAL friendly
- ----------------------------------------------------------------------
- Change database entries ,regions and other variable in terraform.tfvars file
- And Database password in user.tfvars file
- -------------------------------------------------------------------------
+ #EC2 instance with wordpress pre installed and configured </h3>
+ 
+ <h2>
+ AWS FREE TRIAL friendly</h2> 
+ 
+ <h3>Change database entries ,regions and other variable in terraform.tfvars file
+ And Database password in user.tfvars file </h3>
+<h3>
   This script is only suitable for AWS LINUX 2 so make sure you have correct region and 
   ami id in that region.
 
@@ -16,7 +17,7 @@ This terraform projects creates
   Ansible is installed in your local machine
   playbook_test.yml is a ansible script for LINUX 2
 
-</h2>
+</h3>
   --------------------------------------------------------------------------------
  <h3> Security: </h3>
 <p> EC2 will be launched in public subnet and RDS will be launched in private subnet </p>
