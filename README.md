@@ -37,7 +37,7 @@ This terraform projects creates
 <h2> STEPS: </h2>
 
  <p>Clone this repo using command <code>  git clone https://github.com/devbhusal/terraform-ansible-wordpress.git</code></p>
- <p> Go to project folder         <code>  cd terraform-ec2-RDS-wordpress </code></p>
+ <p> Go to project folder         <code>  cd terraform-ansible-wordpress </code></p>
  <p>Initialize terraform          <code>  terraform init</code></p>
  <p>Change database and aws setting in terraform.tfvars file </p>
  <p>Generate Key pair using        <code> ssh-keygen -f mykey-pair  </code></p>
