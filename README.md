@@ -1,4 +1,5 @@
 <img src= "https://devbhusal.com/logo.png" />
+<h2>
 This terraform projects creates
  RDS databse with mysql 5.7 
  #EC2 instance with wordpress pre installed and configured 
@@ -15,7 +16,7 @@ This terraform projects creates
   Ansible is installed in your local machine
   playbook_test.yml is a ansible script for LINUX 2
 
-
+</h2>
   --------------------------------------------------------------------------------
  <h3> Security: </h3>
 <p> EC2 will be launched in public subnet and RDS will be launched in private subnet </p>
