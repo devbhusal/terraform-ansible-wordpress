@@ -1,7 +1,8 @@
 provider "aws" {
 
   region                  = var.region
-  shared_credentials_file = var.shared_credentials_file
+  shared_credentials_files =[var.shared_credentials_file]
+  profile                  = "default"
 }
 
 
@@ -10,7 +11,7 @@ resource "aws_vpc" "prod-vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = "true" #gives you an internal domain name
   enable_dns_hostnames = "true" #gives you an internal host name
-  enable_classiclink   = "false"
+  
   instance_tenancy     = "default"
 
 
@@ -159,7 +160,7 @@ resource "aws_db_instance" "wordpressdb" {
   instance_class         = var.instance_class
   db_subnet_group_name   = aws_db_subnet_group.RDS_subnet_grp.id
   vpc_security_group_ids = ["${aws_security_group.RDS_allow_rule.id}"]
-  name                   = var.database_name
+  db_name                   = var.database_name
   username               = var.database_user
   password               = var.database_password
   skip_final_snapshot    = true
@@ -182,7 +183,7 @@ resource "aws_instance" "wordpressec2" {
   ami             = var.ami
   instance_type   = var.instance_type
   subnet_id       = aws_subnet.prod-subnet-public-1.id
-  security_groups = ["${aws_security_group.ec2_allow_rule.id}"]
+  vpc_security_group_ids = ["${aws_security_group.ec2_allow_rule.id}"]
   
   key_name = aws_key_pair.mykey-pair.id
   tags = {
@@ -223,6 +224,13 @@ resource "local_file" "playbook-rendered-file" {
 }
 
 resource "null_resource" "Wordpress_Installation_Waiting" {
+
+triggers={
+    ec2_id=aws_instance.wordpressec2.id,
+    rds_endpoint=aws_db_instance.wordpressdb.endpoint
+    
+    }
+
   connection {
     type        = "ssh"
     user        = "ec2-user"
@@ -243,9 +251,11 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
 
 # Play ansiblw playbook
   provisioner "local-exec" {
-     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml"
+     command = <<EOT
+     export ANSIBLE_HOST_KEY_CHECKING=False; 
+     ansible-playbook -u ec2-user -i '${aws_eip.eip.public_ip},' --private-key ${var.PRIV_KEY_PATH}  playbook-rendered.yml
      
- 
+     EOT  
 
 
 
@@ -253,6 +263,5 @@ resource "null_resource" "Wordpress_Installation_Waiting" {
 }
 
 }
-
 
 
