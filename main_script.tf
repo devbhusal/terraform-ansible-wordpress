@@ -224,6 +224,13 @@ resource "local_file" "playbook-rendered-file" {
 }
 
 resource "null_resource" "Wordpress_Installation_Waiting" {
+
+triggers={
+    ec2_id=aws_instance.wordpressec2.id,
+    rds_endpoint=aws_db_instance.wordpressdb.endpoint
+    
+    }
+
   connection {
     type        = "ssh"
     user        = "ec2-user"
